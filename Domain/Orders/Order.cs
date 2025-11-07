@@ -10,37 +10,25 @@ public class Order
     {
 
     }
-    public Guid Id { get; private set; }
-    public Guid CustomerId { get; set; }
-    public static Order Create(Customer customer)
+    public OrderId Id { get; private set; }
+    public CustomerId CustomerId { get; private set; }
+    public static Order Create(CustomerId customerId)
     {
         var order = new Order
         {
-            Id = Guid.NewGuid(),
-            CustomerId = customer.Id,
+            Id = new OrderId(Guid.NewGuid()),
+            CustomerId = customerId,
         };
 
         return order;
     }
-    public void Add(Product product)
+    public void Add(ProductId productId, Money price)
     {
-        var lineItem = new LineItem(Guid.NewGuid(), Id, product.Id, product.Price);
+        var lineItem = new LineItem(new LineItemId(Guid.NewGuid()),
+            Id,
+            productId,
+            price);
+
         _lineItems.Add(lineItem);
     }
-}
-
-public class LineItem
-{
-    internal LineItem(Guid id, Guid orderId, Guid productId, Money price)
-    {
-        Id = id;
-        OrderId = orderId;
-        ProductId = productId;
-        Price = price;
-
-    }
-    public Guid Id { get; private set; }
-    public Guid OrderId { get; set; }
-    public Guid ProductId { get; set; }
-    public Money Price { get; set; }
 }
