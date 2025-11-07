@@ -12,17 +12,19 @@ public class Order
     }
     public OrderId Id { get; private set; }
     public CustomerId CustomerId { get; private set; }
+    public OrderStatus Status { get; set; }
     public static Order Create(CustomerId customerId)
     {
         var order = new Order
         {
             Id = new OrderId(Guid.NewGuid()),
             CustomerId = customerId,
+            Status = OrderStatus.Pending
         };
 
         return order;
     }
-    public void Add(ProductId productId, Money price)
+    public void AddLineItem(ProductId productId, Money price)
     {
         var lineItem = new LineItem(new LineItemId(Guid.NewGuid()),
             Id,
