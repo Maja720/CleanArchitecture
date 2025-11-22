@@ -1,4 +1,6 @@
 using Application;
+using Application.Common;
+using Carter;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Presentation;
@@ -19,6 +21,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IApplicationDbContext>(provider =>
+        provider.GetRequiredService<ApplicationDbContext>());
+
+builder.Services.AddCarter();
+
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
@@ -33,5 +40,6 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+app.MapCarter();
 
 app.Run();
